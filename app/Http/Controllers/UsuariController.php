@@ -21,13 +21,11 @@ class UsuariController extends Controller
 
         if ($user) {
             if ($password === $user->contrasenya) {
-                // L'usuari i la contrasenya són correctes, inicia sessió i redirigeix a la pàgina d'inici
                 Auth::login($user);
                 return redirect('/inici');
             }
         }
 
-        // L'usuari i/o la contrasenya són incorrectes, mostra un missatge d'error
         return redirect('/')->with('error', 'Usuari i/o contrasenya incorrectes');
     }
 
@@ -46,10 +44,8 @@ class UsuariController extends Controller
      */
     public function index()
     {
-        // Recuperar todos los registros de usuarios con paginación de 7 usuarios por página
         $usuaris = Usuari::paginate(5);
 
-        // Pasar los registros de usuarios paginados a la vista
         return view('gestioUsuaris', ['usuaris' => $usuaris]);
     }
 
@@ -57,12 +53,10 @@ class UsuariController extends Controller
     {
         $search = $request->input('search');
 
-        // Recuperar los registros de usuarios que coinciden con la búsqueda
         $usuaris = Usuari::where('nom', 'like', "%$search%")
             ->orWhere('cognoms', 'like', "%$search%")
-            ->paginate(7);
+            ->paginate(5);
 
-        // Pasar los registros de usuarios encontrados a la vista
         return view('gestioUsuaris', ['usuaris' => $usuaris]);
     }
 
@@ -79,7 +73,7 @@ class UsuariController extends Controller
      */
     public function store(Request $request)
     {
-        // Validamos los campos del formulario
+
         $request->validate([
             'nom' => 'required',
             'cognoms' => 'required',
@@ -90,19 +84,16 @@ class UsuariController extends Controller
             'unique' => 'El :attribute ja existeix'
         ]);
 
-        // Creamos un nuevo usuario con los datos del formulario
         $usuari = new Usuari;
         $usuari->nom = $request->nom;
         $usuari->cognoms = $request->cognoms;
         $usuari->username = $request->username;
-        $usuari->contrasenya = $request->contrasenya; // Hasheamos la contraseña antes de guardarla
+        $usuari->contrasenya = $request->contrasenya;
         $usuari->tipus_usuaris_id = $request->tipus_usuaris_id;
         $usuari->save();
 
-        // Redirigimos al usuario a la página de la lista de usuarios con mensaje de éxito
         return redirect()->route('gestioUsuaris')->with('success', 'Usuari creat correctament!');
 
-        // Redirigimos al usuario al formulario de creación con mensaje de error
         return redirect()->route('gestioUsuaris')->withErrors(['error' => 'Datos incorrectos, revisar datos introducidos']);
     }
 

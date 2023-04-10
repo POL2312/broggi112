@@ -36,15 +36,10 @@
                                 <input type="tel" class="form-control" name="numTel" id="numTel" placeholder="Nº Telèfon" required autofocus>
                             </div>
 
+                            
+
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <select class="form-select" name="municipio" required>
-                                        <option v-if="carregant" value="" disabled selected>Cargando...</option>
-                                        <option v-else value="" disabled selected>Municipi</option>
-                                        <option v-for="municipi in municipis" :key="municipi.id" :value="municipi.id">{{ municipi.nom }}</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12 mb-3">
                                     <input type="text" class="form-control" name="adreça" id="adreça" placeholder="Adreça" required>
                                 </div>
                             </div>
@@ -78,24 +73,37 @@
                             </div>
 
                             <div class="row" v-if="!foraDeCatalunya">
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" name="provincia" required>
-                                        <option value="" disabled selected>Provincia</option>
 
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" name="comarca" required>
-                                        <option value="" disabled selected>Comarca</option>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <select class="form-select" v-model="selectedProvincia" @change="fetchComarques" required>
+                                            <option v-if="carregant" value="" disabled selected>Cargando...</option>
+                                            <option v-else value="" disabled selected>Provincia</option>
+                                            <option v-for="provincia in provincies" :key="provincia.id" :value="provincia.id">
+                                                {{ provincia.nom }}
+                                            </option>
+                                        </select>
+                                    </div>
 
-                                    </select>
+                                    <div class="col-md-4 mb-3">
+                                        <select class="form-select" v-model="selectedComarca" @change="fetchMunicipis" :disabled="!selectedProvincia" required>
+                                            <option value="" disabled selected>Comarca</option>
+                                            <option v-for="comarca in comarques" :key="comarca.id" :value="comarca.id">
+                                                {{ comarca.nom }}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <select class="form-select" v-model="selectedMunicipi" :disabled="!selectedComarca" required>
+                                            <option value="" disabled selected>Municipi</option>
+                                            <option v-for="municipi in municipis" :key="municipi.id" :value="municipi.id">
+                                                {{ municipi.nom }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" name="municipio" required>
-                                        <option value="" disabled selected>Municipi</option>
-                                        <option value=""></option>
-                                    </select>
-                                </div>
+
                                 <div class="row">
                                     <div class="col-12 mb-3">
                                         <select class="form-select" name="tipusLocalitzacio" required>
@@ -176,32 +184,54 @@ export default {
     data() {
         return {
             foraDeCatalunya: false,
-
+            provincies: [],
+            comarques: [],
             municipis: [],
+            selectedProvincia: "",
+            selectedComarca: "",
             carregant: true,
         };
     },
     created() {
-        this.getData();
+        this.fetchProvincies();
     },
     methods: {
         toggleForaDeCatalunya() {
             this.foraDeCatalunya = !this.foraDeCatalunya;
         },
-        getData() {
-            const self = this;
-            axios.get("/api/municipis")
-                .then( response => {
-                    return response.data
+        fetchProvincies() {
+            axios
+                .get("/api/provincies")
+                .then((response) => {
+                    this.provincies = response.data;
+                    this.carregant = false;
                 })
-                .then(data => {
-                    self.municipis = data
-                    self.carregant = false;
-                })
-                .catch( error => {
+                .catch((error) => {
                     console.error(error);
+                });
+        },
+        fetchComarques() {
+            axios
+                .get(`/api/provincies/${this.selectedProvincia}/comarques`)
+                .then((response) => {
+                    this.comarques = response.data;
+                    this.selectedComarca = "";
+                    this.municipis = [];
                 })
-        }
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+        fetchMunicipis() {
+            axios
+                .get(`/api/comarques/${this.selectedComarca}/municipis`)
+                .then((response) => {
+                    this.municipis = response.data;
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
     },
 };
 </script>

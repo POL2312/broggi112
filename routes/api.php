@@ -2,12 +2,18 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\Api\ProvinciaController;
+use App\Http\Controllers\Api\ComarcaController;
 use App\Http\Controllers\Api\MunicipiController;
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('municipis', MunicipiController::class);
 
+Route::get('/provincies', [ProvinciaController::class, 'index']);
+Route::get('/provincies/{id}/comarques', [ProvinciaController::class, 'comarcas']);
+Route::get('/comarques/{id}/municipis', [ComarcaController::class, 'municipis']);

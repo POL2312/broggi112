@@ -4,22 +4,29 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Municipi;
+use App\Models\Provincia;
 
-class MunicipiController extends Controller
+
+class ProvinciaController extends Controller
 {
-    public function getMunicipis()
+
+
+    public function comarcas(Request $request, $id)
     {
-        $municipis = Municipi::all();
-        return response()->json($municipis);
+        $provincia = Provincia::findOrFail($id);
+        $comarcas = $provincia->comarcas;
+        return response()->json($comarcas);
     }
+
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $municipis = Municipi::all();
-        return response()->json($municipis);
+        $provincies = Provincia::all();
+        return response()->json($provincies);
     }
 
     /**

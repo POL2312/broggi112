@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Municipi extends Model
+class Provincia extends Model
 {
     use HasFactory;
 
-    protected $table = 'municipis';
+    protected $table = 'provincies';
     public $timestamps = false;
 
-    public function comarca()
+    public function comarcas()
     {
-        return $this->belongsTo(Comarca::class, 'comarques_id');
+        return $this->hasMany(Comarca::class, 'provincies_id');
     }
-
-
 }
