@@ -36,7 +36,35 @@
                                 <input type="tel" class="form-control" name="numTel" id="numTel" placeholder="Nº Telèfon" required autofocus>
                             </div>
 
-                            
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <select class="form-select" v-model="selectedProvinciaIdentiTrucada" @change="fetchComarques" required>
+                                        <option v-if="carregant" value="" disabled selected>Carregant...</option>
+                                        <option v-else value="" disabled selected>Provincia</option>
+                                        <option v-for="provincia in provincies" :key="provincia.id" :value="provincia.id">
+                                            {{ provincia.nom }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <select class="form-select" v-model="selectedComarcaIdentiTrucada" @change="fetchMunicipis" :disabled="!selectedProvincia" required>
+                                        <option value="" disabled selected>Comarca</option>
+                                        <option v-for="comarca in comarques" :key="comarca.id" :value="comarca.id">
+                                            {{ comarca.nom }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <select class="form-select" v-model="selectedMunicipiIdentiTrucada" :disabled="!selectedComarca" required>
+                                        <option value="" disabled selected>Municipi</option>
+                                        <option v-for="municipi in municipis" :key="municipi.id" :value="municipi.id">
+                                            {{ municipi.nom }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12 mb-3">
@@ -187,8 +215,12 @@ export default {
             provincies: [],
             comarques: [],
             municipis: [],
+            selectedProvinciaIdentiTrucada: "",
+            selectedComarcaIdentiTrucada: "",
+            selectedMunicipiIdentiTrucada: "",
             selectedProvincia: "",
             selectedComarca: "",
+            selectedMunicipi: "",
             carregant: true,
         };
     },

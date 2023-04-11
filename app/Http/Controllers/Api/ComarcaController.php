@@ -19,8 +19,6 @@ class ComarcaController extends Controller
     }
 
 
-
-
     /**
      * Display a listing of the resource.
      */
