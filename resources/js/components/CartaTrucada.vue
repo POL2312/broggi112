@@ -1,5 +1,30 @@
 <template lang="">
-        <div class="container main-container">
+    <div class="container main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h6>Codi de la trucada</h6>
+                            <p>CA-1111111111</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h6>Inici de la trucada</h6>
+                            <p>{{ fechaHoraActual }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h6>Duració de la trucada</h6>
+                            <p>{{ contadorFormateado }}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-primary" @click="finalizarLlamada">Finalitzar Trucada</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light ">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
@@ -36,38 +61,13 @@
                                 <input type="tel" class="form-control" name="numTel" id="numTel" placeholder="Nº Telèfon" required autofocus>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" v-model="selectedProvinciaIdentiTrucada" @change="fetchComarques" required>
-                                        <option v-if="carregant" value="" disabled selected>Carregant...</option>
-                                        <option v-else value="" disabled selected>Provincia</option>
-                                        <option v-for="provincia in provincies" :key="provincia.id" :value="provincia.id">
-                                            {{ provincia.nom }}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" v-model="selectedComarcaIdentiTrucada" @change="fetchMunicipis" :disabled="!selectedProvincia" required>
-                                        <option value="" disabled selected>Comarca</option>
-                                        <option v-for="comarca in comarques" :key="comarca.id" :value="comarca.id">
-                                            {{ comarca.nom }}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <select class="form-select" v-model="selectedMunicipiIdentiTrucada" :disabled="!selectedComarca" required>
-                                        <option value="" disabled selected>Municipi</option>
-                                        <option v-for="municipi in municipis" :key="municipi.id" :value="municipi.id">
-                                            {{ municipi.nom }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+                            <!-- AQUI VAN ELS MUNICIPIS TAMBE! -->
 
                             <div class="row">
-                                <div class="col-md-12 mb-3">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" name="municipiInter" id="municipiInter" placeholder="Municipi" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <input type="text" class="form-control" name="adreça" id="adreça" placeholder="Adreça" required>
                                 </div>
                             </div>
@@ -144,10 +144,7 @@
 
                             <div class="row" v-else>
                                 <div class="col-12 mb-3">
-                                    <select class="form-select" name="provinciaFora" required>
-                                        <option value="" disabled selected>Provincia</option>
-
-                                    </select>
+                                    <input type="text" class="form-control" name="municipiInter" id="municipiInter" placeholder="Municipi" required>
                                 </div>
 
                             </div>
@@ -191,9 +188,6 @@
                             </p>
                         </section>
 
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Enviar</button>
-                        </div>
                     </form>
 
                 </div>
@@ -205,6 +199,7 @@
             </div>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -215,17 +210,39 @@ export default {
             provincies: [],
             comarques: [],
             municipis: [],
+
             selectedProvinciaIdentiTrucada: "",
             selectedComarcaIdentiTrucada: "",
             selectedMunicipiIdentiTrucada: "",
+
             selectedProvincia: "",
             selectedComarca: "",
             selectedMunicipi: "",
+
             carregant: true,
+
+            fechaHoraActual: "",
+            contador: 0,
+            interval: null,
         };
     },
     created() {
+
+    },
+    mounted() {
+        this.setFechaHoraActual();
+        this.iniciarContador();
         this.fetchProvincies();
+    },
+    beforeDestroy() {
+        clearInterval(this.interval);
+    },
+    computed: {
+        contadorFormateado() {
+            const minutos = Math.floor(this.contador / 60);
+            const segundos = this.contador % 60;
+            return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+        },
     },
     methods: {
         toggleForaDeCatalunya() {
@@ -264,6 +281,14 @@ export default {
                     console.error(error);
                 });
         },
+        setFechaHoraActual() {
+            this.fechaHoraActual = new Date().toLocaleString('es-ES');
+        },
+        iniciarContador() {
+            this.interval = setInterval(() => {
+                this.contador++;
+            }, 1000);
+        },
     },
 };
 </script>
@@ -271,12 +296,12 @@ export default {
 
 <style>
 .main-container {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
 .content-container {
-    height: calc(85vh - 100px);
+    height: calc(77vh - 100px);
     overflow-y: scroll;
 }
 </style>
