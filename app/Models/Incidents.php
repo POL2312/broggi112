@@ -10,6 +10,7 @@ class Incidents extends Model
     use HasFactory;
 
     protected $table = 'incidents';
+    public $timestamps = false;
 
     public function cartes_trucades()
     {

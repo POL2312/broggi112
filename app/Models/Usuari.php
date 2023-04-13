@@ -11,7 +11,6 @@ class Usuari extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'usuaris';
-
     public $timestamps = false;
 
     public function tipuUsuari()

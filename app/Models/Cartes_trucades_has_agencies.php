@@ -11,6 +11,7 @@ class Cartes_trucades_has_agencies extends Model
 
     protected $table = 'cartes_trucades_has_agencies';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
 
     public function cartes_trucades()

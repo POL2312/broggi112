@@ -10,6 +10,7 @@ class Estat_expedients extends Model
     use HasFactory;
 
     protected $table = 'estat_expedients';
+    public $timestamps = false;
 
     public function expedients()
     {

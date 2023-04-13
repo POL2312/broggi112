@@ -9,6 +9,7 @@ class Agencies extends Model
 {
     use HasFactory;
     protected $table = 'agencies';
+    public $timestamps = false;
 
     public function municipi()
     {

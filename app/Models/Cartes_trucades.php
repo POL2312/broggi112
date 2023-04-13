@@ -11,6 +11,7 @@ class CartesTrucades extends Model
 
     protected $table = 'cartes_trucades';
     protected $primaryKey = 'id';
+    public $timestamps = false;
 
 
     public function interlocutor()

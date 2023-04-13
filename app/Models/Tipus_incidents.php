@@ -10,6 +10,7 @@ class Tipus_incidents extends Model
     use HasFactory;
 
     protected $table = 'tipus_incidents';
+    public $timestamps = false;
 
     public function incidents()
     {

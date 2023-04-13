@@ -10,6 +10,7 @@ class Interlocutor extends Model
     use HasFactory;
 
     protected $table = 'interlocutors';
+    public $timestamps = false;
 
     public function cartes_trucades()
     {

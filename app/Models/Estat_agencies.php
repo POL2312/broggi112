@@ -9,6 +9,7 @@ class Estat_agencies extends Model
 {
     use HasFactory;
     protected $table = 'estat_agencies';
+    public $timestamps = false;
 
     public function cartes_trucades_has_agencies()
     {

@@ -9,6 +9,7 @@ class TipusLocalitzacio extends Model
 {
     use HasFactory;
     protected $table = 'tipus_localitzacions';
+    public $timestamps = false;
 
     public function cartes_trucades()
     {
