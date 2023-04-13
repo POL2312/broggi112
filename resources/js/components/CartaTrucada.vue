@@ -14,7 +14,7 @@
                         </div>
                         <div class="col-md-3">
                             <h6>Duració de la trucada</h6>
-                            <p>{{ contadorFormateado }}</p>
+                            <p>{{ contadorFormatejat }}</p>
                         </div>
                         <div class="col-md-3">
                             <button class="btn btn-primary" @click="finalizarLlamada">Finalitzar Trucada</button>
@@ -238,7 +238,7 @@ export default {
         clearInterval(this.interval);
     },
     computed: {
-        contadorFormateado() {
+        contadorFormatejat() {
             const minutos = Math.floor(this.contador / 60);
             const segundos = this.contador % 60;
             return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
