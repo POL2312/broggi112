@@ -9,4 +9,10 @@ class Interlocutor extends Model
 {
     use HasFactory;
 
+    protected $table = 'interlocutors';
+
+    public function cartes_trucades()
+    {
+        return $this->hasMany(Cartes_trucades::class, 'interlocutors_id');
+    }
 }
