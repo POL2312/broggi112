@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CartesTrucades extends Model
+class Cartes_Trucades extends Model
 {
     use HasFactory;
 
@@ -13,6 +13,11 @@ class CartesTrucades extends Model
     protected $primaryKey = 'id';
     public $timestamps = false;
 
+
+    public function expedients()
+    {
+        return $this->belongsTo(Expedients::class, 'expedients_id');
+    }
 
     public function interlocutor()
     {
@@ -37,11 +42,6 @@ class CartesTrucades extends Model
     public function incident()
     {
         return $this->belongsTo(Incidents::class, 'incidents_id');
-    }
-
-    public function expedients()
-    {
-        return $this->belongsTo(Expedients::class, 'expedients_id');
     }
 
     public function usuari()

@@ -13,13 +13,15 @@ class Expedients extends Model
     protected $primaryKey = 'id';
     public $timestamp = false;
 
-    public function estat_expedients()
+    public function estatExpedient()
     {
         return $this->belongsTo(Estat_expedients::class, 'estat_expedients_id');
     }
-    
-    public function cartes_trucades()
+
+    public function cartesTrucades()
     {
-        return $this->hasMany(Expedients::class, 'expedients_id');
+        return $this->hasMany(Cartes_trucades::class, 'expedients_id');
     }
+
+
 }

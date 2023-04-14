@@ -20,7 +20,7 @@
                         aria-expanded="false">
                         <i class="bi bi-person"></i>
                         <span>{{ auth()->user()->nom }}</span>
-                    </button>   
+                    </button>
                     <ul class="dropdown-menu dropdown-menu-end ">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -48,12 +48,13 @@
                     </div>
                 </a>
 
-                <div class="col text-center">
+                <a href="{{ route('expedients.index') }}">
+                    <div class="col text-center">
+                        <img class="img-fluid" src="https://via.placeholder.com/300x150" alt="">
+                        <h6>GESTIONAR EXPEDIENTS</h6>
+                    </div>
+                </a>
 
-                    <img class="img-fluid" src="https://via.placeholder.com/300x150" alt="">
-                    <h6>GESTIONAR EXPEDIENTS</h6>
-
-                </div>
 
                 <div class="col text-center">
 

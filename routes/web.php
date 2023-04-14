@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuariController;
 use App\Http\Controllers\TipuUsuariController;
+use App\Models\Expedients;
+use App\Http\Controllers\ExpedientsController;
+
 
 Route::get('/', function () {
     return view('login');
@@ -22,7 +25,11 @@ Route::middleware(['auth'])->group(function () {
         return view('carta_trucada');
     })->name('cartaTrucada');
 
+    Route::get('/expedients', [ExpedientsController::class, 'index'])->name('expedients.index');
+
 });
+
+
 
 Route::middleware(['auth', 'tipoUsuario'])->group(function () {
 
@@ -37,15 +44,8 @@ Route::middleware(['auth', 'tipoUsuario'])->group(function () {
     Route::put('/usuaris/{id}', [UsuariController::class, 'update'])->name('usuaris.update');
 
     Route::post('/usuaris', [UsuariController::class, 'store'])->name('usuaris.store');
-
-
 });
 
 Route::fallback(function () {
     return redirect('/');
 });
-
-
-
-
-
