@@ -143,7 +143,7 @@
                                 <div class="row">
                                     <div class="col-12 mb-3">
                                         <select class="form-select" name="tipusLocalitzacio" required
-                                            v-model="datos.selectedLocal">
+                                            v-model="datos.tipusLocali">
                                             <option value="" disabled selected>Tipus de localització</option>
 
                                         </select>
@@ -181,12 +181,14 @@
 
                             <div class="row">
                                 <div class="col">
-                                    <select class="form-select" name="tipus_incident" required v-model="datos.tipus_incident">
-                                        <option value="" disabled v-bind:selected="!datos.tipus_incident">Tipus d'incident</option>
-                                        <option v-for="tipus in tipus_incidents" :key="tipus.id" :value="tipus.id">
-                                          {{ tipus.nom }}
+                                    <select class="form-select" name="tipus_incident" required
+                                        v-model="datos.tipus_incident">
+                                        <option value="" disabled v-bind:selected="!datos.tipus_incident">Tipus d'incident
                                         </option>
-                                      </select>
+                                        <option v-for="tipus in tipus_incidents" :key="tipus.id" :value="tipus.id">
+                                            {{ tipus.nom }}
+                                        </option>
+                                    </select>
 
                                 </div>
                                 <div class="col">
@@ -250,25 +252,26 @@ export default {
             interval: null,
 
             datos: {
-                codiTrucada: this.generarCodiTrucada(), // Genera un código único para cada llamada
-                iniciTrucada: new Date().toISOString(), // Establece la fecha y hora actual
-                duracioTrucada: 0, // Establece la duración inicial de la llamada a 0
+                codiTrucada: this.generarCodiTrucada(),
+                iniciTrucada: "",
+                duracioTrucada: 0,
 
                 numTel: "",
                 nom: "",
                 cognom: "",
                 antecedents: "",
                 notacomuna: "",
-                selectedLocal: "",
+                tipusLocali: 9,
                 adresa: "",
                 descripcio: "",
                 detalls: "",
                 incident: "",
                 tipus_incident: "",
-                expedient: "",
-                usuari: "",
-
+                expedient: 1,
+                usuari: 3,
+                interlocutorID: "",
                 selectedMunicipi: "",
+                selectedProvincia: 1,
             },
 
         };
@@ -358,22 +361,33 @@ export default {
                 this.contador++;
             }, 1000);
         },
+
         enviarDatos() {
-
-            this.datos.duracioTrucada = this.contadorFormatejat;
-
-
+            this.datos.duracioTrucada = this.convertirTiempoASegundos(this.contadorFormatejat);
+            this.datos.iniciTrucada = new Date().toISOString();
             console.log('Datos del objeto:', this.datos);
 
             axios
                 .post("/api/cartes-trucades", this.datos)
                 .then((response) => {
-
+                    console.log(response.data.message);
+                    location.reload();
                 })
                 .catch((error) => {
-
+                    if (error.response) {
+                        console.error('Error al guardar los datos:', error.response.data.message, 'Código de error:', error.response.data.code);
+                    } else {
+                        console.error('Error al guardar los datos:', error.message);
+                    }
                 });
         },
+
+        convertirTiempoASegundos(tiempoFormateado) {
+            const [minutos, segundos] = tiempoFormateado.split(':');
+            return parseInt(minutos) * 60 + parseInt(segundos);
+        },
+
+
         generarCodiTrucada() {
             const timestamp = new Date().getTime();
             return `CA-${timestamp}`;

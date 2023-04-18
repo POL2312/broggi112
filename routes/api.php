@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\ProvinciaController;
 use App\Http\Controllers\Api\ComarcaController;
 use App\Http\Controllers\Api\MunicipiController;
 
-use App\Http\Controllers\CartesTrucadesController;
+use App\Http\Controllers\Api\CartesTrucadesController;
 use App\Http\Controllers\Api\IncidentController;
 
 Route::post('/cartes-trucades', [CartesTrucadesController::class, 'store']);
