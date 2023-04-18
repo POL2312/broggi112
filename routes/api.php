@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ComarcaController;
 use App\Http\Controllers\Api\MunicipiController;
 
 use App\Http\Controllers\CartesTrucadesController;
+use App\Http\Controllers\Api\IncidentController;
 
 Route::post('/cartes-trucades', [CartesTrucadesController::class, 'store']);
 
@@ -15,6 +16,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
+Route::get('/tipus_incidents', [IncidentController::class, 'index']);
+Route::get('/tipus_incidents/{id}/incidents', [IncidentController::class, 'show']);
 
 Route::get('/provincies', [ProvinciaController::class, 'index']);
 Route::get('/provincies/{id}/comarques', [ProvinciaController::class, 'comarcas']);

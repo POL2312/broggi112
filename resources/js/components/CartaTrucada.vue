@@ -130,8 +130,8 @@
                                     </div>
 
                                     <div class="col-md-4 mb-3">
-                                        <select class="form-select" v-model="datos.selectedMunicipi" :disabled="!selectedComarca"
-                                            required>
+                                        <select class="form-select" v-model="datos.selectedMunicipi"
+                                            :disabled="!selectedComarca" required>
                                             <option value="" disabled selected>Municipi</option>
                                             <option v-for="municipi in municipis" :key="municipi.id" :value="municipi.id">
                                                 {{ municipi.nom }}
@@ -169,7 +169,8 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <textarea class="form-control" name="mesInformacio" id="mesInformacio"
-                                        placeholder="Més informació sobre la localització" v-model="datos.detalls"></textarea>
+                                        placeholder="Més informació sobre la localització"
+                                        v-model="datos.detalls"></textarea>
                                 </div>
                             </div>
                         </section>
@@ -180,22 +181,27 @@
 
                             <div class="row">
                                 <div class="col">
-                                    <select class="form-select" name="tipus_incident" required>
-                                        <option value="" disabled selected>Tipus d'incident</option>
-                                        <!-- Opciones de tipos de incidentes aquí -->
-                                    </select>
+                                    <select class="form-select" name="tipus_incident" required v-model="datos.tipus_incident">
+                                        <option value="" disabled v-bind:selected="!datos.tipus_incident">Tipus d'incident</option>
+                                        <option v-for="tipus in tipus_incidents" :key="tipus.id" :value="tipus.id">
+                                          {{ tipus.nom }}
+                                        </option>
+                                      </select>
+
                                 </div>
                                 <div class="col">
                                     <select class="form-select" name="incident" required v-model="datos.incident">
                                         <option value="" disabled selected>Incident</option>
-                                        <!-- Opciones de incidentes aquí -->
+                                        <option v-for="incident in incidents" :key="incident.id" :value="incident.id">
+                                            {{ incident.nom }}
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <p class="mt-3">INCIDENT SELECCIONAT: <span id="incident_seleccionat">N/A</span></p>
-                            <p>DEFINICIÓ INCIDENT: <span id="definicio_incident">N/A</span></p>
-                            <p>INSTRUCCIONS INCIDENT: Aquí les instruccions</p>
+                            <p class="mt-3">INCIDENT SELECCIONAT: <span>{{ incidentSeleccionat.nom || 'N/A' }}</span></p>
+                            <p>DEFINICIÓ INCIDENT: <span>{{ incidentSeleccionat.definicio || 'N/A' }}</span></p>
+                            <p>INSTRUCCIONS INCIDENT: {{ incidentSeleccionat.instruccions || 'Aquí les instruccions' }}</p>
                         </section>
 
 
@@ -229,6 +235,10 @@ export default {
             comarques: [],
             municipis: [],
 
+            tipus_incidents: [],
+            incidents: [],
+            incidentSeleccionat: {},
+
             selectedProvincia: "",
             selectedComarca: "",
 
@@ -254,13 +264,11 @@ export default {
                 descripcio: "",
                 detalls: "",
                 incident: "",
+                tipus_incident: "",
                 expedient: "",
                 usuari: "",
 
                 selectedMunicipi: "",
-
-                // provinciaID: "",
-                // municipiID: "",
             },
 
         };
@@ -272,6 +280,7 @@ export default {
         this.setFechaHoraActual();
         this.iniciarContador();
         this.fetchProvincies();
+        this.fetchTipusIncidents();
     },
     beforeDestroy() {
         clearInterval(this.interval);
@@ -282,6 +291,19 @@ export default {
             const segundos = this.contador % 60;
             return `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
         },
+    },
+    watch: {
+        'datos.tipus_incident': function (newVal) {
+            if (newVal) {
+                this.fetchIncidents(newVal);
+                this.incidentSeleccionat = {};
+            } else {
+                this.incidents = [];
+            }
+        },
+        'datos.incident': function (newVal) {
+            this.incidentSeleccionat = this.incidents.find(incident => incident.id == newVal) || {};
+        }
     },
     methods: {
         toggleForaDeCatalunya() {
@@ -320,6 +342,14 @@ export default {
                     console.error(error);
                 });
         },
+        async fetchTipusIncidents() {
+            const response = await axios.get('/api/tipus_incidents');
+            this.tipus_incidents = response.data;
+        },
+        async fetchIncidents(tipus_incidents_id) {
+            const response = await axios.get(`/api/tipus_incidents/${tipus_incidents_id}/incidents`);
+            this.incidents = response.data;
+        },
         setFechaHoraActual() {
             this.fechaHoraActual = new Date().toLocaleString('es-ES');
         },
@@ -330,8 +360,8 @@ export default {
         },
         enviarDatos() {
 
-            this.contadorFormatejat
-          
+            this.datos.duracioTrucada = this.contadorFormatejat;
+
 
             console.log('Datos del objeto:', this.datos);
 
