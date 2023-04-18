@@ -7,7 +7,9 @@ use App\Http\Controllers\Api\ProvinciaController;
 use App\Http\Controllers\Api\ComarcaController;
 use App\Http\Controllers\Api\MunicipiController;
 
+use App\Http\Controllers\CartesTrucadesController;
 
+Route::post('/cartes-trucades', [CartesTrucadesController::class, 'store']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
