@@ -142,13 +142,15 @@
 
                                 <div class="row">
                                     <div class="col-12 mb-3">
-                                        <select class="form-select" name="tipusLocalitzacio" required
-                                            v-model="datos.tipusLocali">
+                                        <select class="form-select" name="tipusLocalitzacio" required v-model="datos.tipusLocali">
                                             <option value="" disabled selected>Tipus de localització</option>
-
+                                            <option v-for="tipus in tipusLocalitzacions" :key="tipus.id" :value="tipus.id">
+                                                {{ tipus.nom }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
+
 
                                 <div class="row">
                                     <div class="col-md-12 mb-3">
@@ -236,6 +238,7 @@ export default {
             provincies: [],
             comarques: [],
             municipis: [],
+            tipusLocalitzacions: [],
 
             tipus_incidents: [],
             incidents: [],
@@ -261,14 +264,14 @@ export default {
                 cognom: "",
                 antecedents: "",
                 notacomuna: "",
-                tipusLocali: 9,
+                tipusLocali: "",
                 adresa: "",
                 descripcio: "",
                 detalls: "",
                 incident: "",
                 tipus_incident: "",
                 expedient: 1,
-                usuari: 3,
+                usuari: window.userId,
                 interlocutorID: "",
                 selectedMunicipi: "",
                 selectedProvincia: 1,
@@ -284,6 +287,7 @@ export default {
         this.iniciarContador();
         this.fetchProvincies();
         this.fetchTipusIncidents();
+        this.carregaTipusLocalitzacions();
     },
     beforeDestroy() {
         clearInterval(this.interval);
@@ -352,6 +356,15 @@ export default {
         async fetchIncidents(tipus_incidents_id) {
             const response = await axios.get(`/api/tipus_incidents/${tipus_incidents_id}/incidents`);
             this.incidents = response.data;
+        },
+        carregaTipusLocalitzacions() {
+            axios.get('/api/tipus-localitzacions')
+                .then(response => {
+                    this.tipusLocalitzacions = response.data;
+                })
+                .catch(error => {
+                    console.error('Error carregant tipus de localitzacions:', error);
+                });
         },
         setFechaHoraActual() {
             this.fechaHoraActual = new Date().toLocaleString('es-ES');

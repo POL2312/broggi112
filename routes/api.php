@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MunicipiController;
 
 use App\Http\Controllers\Api\CartesTrucadesController;
 use App\Http\Controllers\Api\IncidentController;
+use App\Http\Controllers\Api\TipusLocalitzacionsController;
 
 Route::post('/cartes-trucades', [CartesTrucadesController::class, 'store']);
 
@@ -17,6 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
+Route::get('/tipus-localitzacions', [TipusLocalitzacionsController::class, 'index']);
 
 Route::get('/tipus_incidents', [IncidentController::class, 'index']);
 Route::get('/tipus_incidents/{id}/incidents', [IncidentController::class, 'show']);
