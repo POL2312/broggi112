@@ -142,7 +142,8 @@
 
                                 <div class="row">
                                     <div class="col-12 mb-3">
-                                        <select class="form-select" name="tipusLocalitzacio" required v-model="datos.tipusLocali">
+                                        <select class="form-select" name="tipusLocalitzacio" required
+                                            v-model="datos.tipusLocali">
                                             <option value="" disabled selected>Tipus de localització</option>
                                             <option v-for="tipus in tipusLocalitzacions" :key="tipus.id" :value="tipus.id">
                                                 {{ tipus.nom }}
@@ -161,10 +162,24 @@
 
                             </div>
 
-                            <div class="row" v-else>
-                                <div class="col-12 mb-3">
-                                    <input type="text" class="form-control" name="municipiInter" id="municipiInter"
-                                        placeholder="Municipi" required v-model="datos.descripcio">
+                            <div v-else>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <input type="text" class="form-control" name="municipiInter" id="municipiInter"
+                                            placeholder="Municipi" required v-model="datos.descripcio">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <select class="form-select" name="tipusLocalitzacio" required
+                                            v-model="datos.tipusLocali">
+                                            <option value="" disabled selected>Tipus de localització</option>
+                                            <option v-for="tipus in tipusLocalitzacions" :key="tipus.id" :value="tipus.id">
+                                                {{ tipus.nom }}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
